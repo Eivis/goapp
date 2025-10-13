@@ -1,0 +1,19 @@
+FROM golang:alpine3.22
+
+WORKDIR /usr/src/app
+
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+# COPY go.mod go.sum ./
+# RUN go mod download
+
+COPY . .
+
+# Build the binary
+RUN go build -v -o /usr/local/bin/app ./...
+
+# Expose port
+EXPOSE 8080
+
+# Command to run
+CMD ["app"]
+
