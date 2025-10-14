@@ -1,0 +1,7 @@
+# Ignore version control metadata
+.git
+.gitignore
+
+# Exclude GitHub Actions workflow files
+.github/
+.github/workflows/
