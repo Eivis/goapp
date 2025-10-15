@@ -48,7 +48,7 @@ jobs:
         run: |
           cd deployment
           # edit tag in manifest
-          sed -i '' "s/\(vilkaspilka5\/goapp\):.*/\1:${{ needs.build.outputs.new_tag }}" deployment.yaml
+          sed -i "s/\(vilkaspilka5\/goapp\):.*/\1:${{ needs.build.outputs.new_tag }}" deployment.yaml
 
       - name: Commit & push manifest change
         working-directory: deployment
