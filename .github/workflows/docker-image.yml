@@ -42,12 +42,13 @@ jobs:
         with:
           repository: Eivis/kubernetes-vin
           token: ${{ secrets.MANIFEST_REPO_TOKEN }}
-          path: deployment
+          path: .
 
       - name: Update image tag in overlay
         run: |
           pwd
           ls
+          echo "go to deployment"
           cd deployment
           pwd
           ls
