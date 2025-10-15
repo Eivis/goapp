@@ -26,6 +26,7 @@ jobs:
     - name: publish to docker hub
       uses: docker/build-push-action@v6
       with:
+        push: true
         tags: |
           vilkaspilka5/goapp:latest
           vilkaspilka5/goapp:${{ steps.sha.outputs.short_sha }}
