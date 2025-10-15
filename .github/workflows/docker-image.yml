@@ -11,7 +11,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    outputs:
+      new_tag: ${{ steps.sha.outputs.short_sha }}
     steps:
     - name: checkout code
       uses: actions/checkout@v4
@@ -30,3 +31,30 @@ jobs:
         tags: |
           vilkaspilka5/goapp:latest
           vilkaspilka5/goapp:${{ steps.sha.outputs.short_sha }}
+
+  update-manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout manifest repo
+        uses: actions/checkout@v4
+        with:
+          repository: Eivis/kubernetes-vin
+          token: ${{ secrets.MANIFEST_REPO_TOKEN }}
+          path: deployment
+
+      - name: Update image tag in overlay
+        run: |
+          cd deployment
+          # edit tag in manifest
+          sed -i '' "s/\(vilkaspilka5\/goapp\):.*/\1:${{ needs.build.outputs.new_tag }}" deployment.yaml
+
+      - name: Commit & push manifest change
+        working-directory: deployment
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add .
+          git commit -m "Update container image version to ${{ needs.build.outputs.new_tag }}" || exit 0
+          git push origin main
