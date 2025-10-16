@@ -1,18 +1,5 @@
-FROM golang:alpine3.22
+# Use the official NGINX image from the Docker Hub
+FROM nginx:stable-alpine3.21
 
-WORKDIR /usr/src/app
-
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-# COPY go.mod go.sum ./
-# RUN go mod download
-
-COPY . .
-
-# Build the binary
-RUN go build -v -o /usr/local/bin/app ./...
-
-# Expose port
-EXPOSE 80
-
-# Command to run
-CMD ["app"]
+# Copy the static HTML file into the container
+COPY index.html /usr/share/nginx/html/index.html
